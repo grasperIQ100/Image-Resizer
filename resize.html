@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #image-container {
+            display: none;
+            margin-top: 20px;
+        }
+        #uploaded-image {
+            max-width: 100%;
+            height: auto;
+        }
+        .resize-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <img src="https://via.placeholder.com/150" alt="Logo" class="logo">
+    <h1 class="text-center">Image Resizer</h1>
+    <form class="mb-3">
+        <input type="file" id="image-input" class="form-control" accept="image/*">
+    </form>
+    <div id="image-container" class="text-center">
+        <img id="uploaded-image" src="#" alt="Uploaded Image" class="img-fluid">
+    </div>
+    <div class="resize-buttons text-center">
+        <p>Reload Website to upload Another Image File!! </p>
+        <button id="resize-button-instagram" class="btn btn-primary m-1">Instagram (1080x1080)</button>
+        <button id="resize-button-facebook" class="btn btn-primary m-1">Facebook (1200x630)</button>
+        <button id="resize-button-twitter" class="btn btn-primary m-1">Twitter (1200x675)</button>
+        <button id="resize-button-website" class="btn btn-primary m-1">Website (600x300)</button>
+        <button id="download-button" class="btn btn-success m-1" disabled>Download</button>
+    </div>
+
+    <script>
+        document.getElementById('image-input').addEventListener('change', function() {
+            const imageContainer = document.getElementById('image-container');
+            const uploadedImage = document.getElementById('uploaded-image');
+            const file = this.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    uploadedImage.src = e.target.result;
+                    imageContainer.style.display = 'block';
+                    document.getElementById('download-button').disabled = false;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imageContainer.style.display = 'none';
+                document.getElementById('download-button').disabled = true;
+            }
+        });
+
+        function resizeImage(width, height) {
+            const uploadedImage = document.getElementById('uploaded-image');
+            uploadedImage.width = width;
+            uploadedImage.height = height;
+        }
+
+        document.getElementById('resize-button-instagram').addEventListener('click', function () {
+            resizeImage(1080, 1080);
+        });
+        document.getElementById('resize-button-facebook').addEventListener('click', function () {
+            resizeImage(1200, 630);
+        });
+        document.getElementById('resize-button-twitter').addEventListener('click', function () {
+            resizeImage(1200, 675);
+        });
+        document.getElementById('resize-button-website').addEventListener('click', function () {
+            resizeImage(600, 300);
+        });
+
+        document.getElementById('download-button').addEventListener('click', function () {
+            const uploadedImage = document.getElementById('uploaded-image');
+            const link = document.createElement('a');
+            link.href = uploadedImage.src;
+            link.download = 'resized-image.png';
+            link.click();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
